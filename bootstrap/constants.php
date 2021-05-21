@@ -16,7 +16,7 @@ define('PASSWORD_INCORRECT_MESSAGE', 'Hasło jest nieprawidłowe.');
 define('PASSWORD_SUCCESS_UPDATE_MESSAGE', 'Hasło zostało pomyślnie zaktualizowane.');
 
 define('SERVER_ERROR_MESSAGE','An Error is occured on the server.');
-
+define('NOT_EXIST_ACCOUNT_MESSAGE', 'The Account does not exist');
 define('CREATE_ASSORTMENT_GROUP_SUCCESS', 'Twój grupy asortymentowe został zapisany.');
 define('UPDATE_ASSORTMENT_GROUP_SUCCESS', 'Twój grupy asortymentowe został zaktualizowany.');
 define('DELETE_ASSORTMENT_GROUP_SUCCESS', 'Twój grupy asortymentowe został usunięty.');
