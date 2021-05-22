@@ -38,5 +38,9 @@ define('CREATE_CONTRACTOR_SUCCESS', 'Twój kontrahenci został zapisany.');
 define('UPDATE_CONTRACTOR_SUCCESS', 'Twój kontrahenci został zaktualizowany.');
 define('DELETE_CONTRACTOR_SUCCESS', 'Twój kontrahenci został usunięty.');
 
+define('CREATE_WAREHOUSE_OPERATION_SUCCESS', 'Twój operacje magazynowe został zapisany.');
+define('UPDATE_WAREHOUSE_OPERATION_SUCCESS', 'Twój operacje magazynowe został zaktualizowany.');
+define('DELETE_WAREHOUSE_OPERATION_SUCCESS', 'Twój operacje magazynowe został usunięty.');
+
 define('SUCCESS_MESSAGE', 'The success response has been received');
 

@@ -75,3 +75,11 @@ $router->group(['prefix' => 'contractor', 'middleware' => ['auth']], function ()
     $router->delete('/', 'ContractorController@delete');
 });
 
+$router->group(['prefix' => 'warehouse_operation', 'middleware' => ['auth']], function () use ($router) {
+    $router->get('/info', 'WarehouseOperationController@getInfo');
+    $router->post('/filter_list', 'WarehouseOperationController@getFilterList');
+    $router->get('/', 'WarehouseOperationController@get');
+    $router->post('/', 'WarehouseOperationController@create');
+    $router->put('/',  'WarehouseOperationController@update');
+    $router->delete('/', 'WarehouseOperationController@delete');
+});

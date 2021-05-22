@@ -27,4 +27,8 @@ class Assortment extends Model
 
     protected $primaryKey = 'id';
 
+    public function assortment_group_item() {
+        return $this->hasOne(AssortmentGroup::class, 'id', 'assortment_group');
+    }
+
 }
