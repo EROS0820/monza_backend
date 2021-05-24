@@ -42,8 +42,8 @@
 <div class='content'>
     <div class='block' >
             <span>
-                <a href = '{{$url}}'>
-                    <button class='button'>Kliknij, aby zresetować nowe hasło</button>
+                <a href='{{$url}}'>
+                    Kliknij, aby zresetować nowe hasło
                 </a>
             </span>
     </div>

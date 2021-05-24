@@ -42,8 +42,8 @@
 <div class='content'>
     <div class='block' >
             <span>
-                <a href = '{{$url}}'>
-                    <button class='button'>Kliknij tutaj, aby aktywować konto</button>
+                <a href='{{$url}}'>
+                    Kliknij tutaj, aby aktywować konto
                 </a>
             </span>
     </div>
