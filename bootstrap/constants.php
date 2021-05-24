@@ -17,6 +17,12 @@ define('PASSWORD_SUCCESS_UPDATE_MESSAGE', 'Hasło zostało pomyślnie zaktualizo
 
 define('SERVER_ERROR_MESSAGE','An Error is occured on the server.');
 define('NOT_EXIST_ACCOUNT_MESSAGE', 'The Account does not exist');
+
+define('CREATE_ASSORTMENT_SUCCESS', 'Twój asortymentowe został zapisany.');
+define('UPDATE_ASSORTMENT_SUCCESS', 'Twój asortymentowe został zaktualizowany.');
+define('DELETE_ASSORTMENT_SUCCESS', 'Twój asortymentowe został usunięty.');
+
+
 define('CREATE_ASSORTMENT_GROUP_SUCCESS', 'Twój grupy asortymentowe został zapisany.');
 define('UPDATE_ASSORTMENT_GROUP_SUCCESS', 'Twój grupy asortymentowe został zaktualizowany.');
 define('DELETE_ASSORTMENT_GROUP_SUCCESS', 'Twój grupy asortymentowe został usunięty.');
@@ -43,4 +49,6 @@ define('UPDATE_WAREHOUSE_OPERATION_SUCCESS', 'Twój operacje magazynowe został 
 define('DELETE_WAREHOUSE_OPERATION_SUCCESS', 'Twój operacje magazynowe został usunięty.');
 
 define('SUCCESS_MESSAGE', 'The success response has been received');
+
+define('IMPORT_SUCCESS', 'Plik został pomyślnie zaimportowany.');
 

@@ -90,6 +90,96 @@ class AssortmentGroupController extends Controller
      * @param  Request  $request
      * @return Response
      */
+    public function createList(Request $request) {
+        try {
+            $rows = $request->data;
+            foreach($rows as $item) {
+                $is_main_group = ($item['is_main_group'] == 'TAK');
+
+                if (!$is_main_group)
+                    continue;
+
+                $assortment_group_count = AssortmentGroup::where('name', '=', $item['name'])->count();
+
+                if ($assortment_group_count == 0) {
+                    $assortment_group = new AssortmentGroup();
+                    $assortment_group->name = $item['name'];
+                    $assortment_group->is_main_group = $is_main_group;
+                    $assortment_group->main_group = 0;
+                    $assortment_group->code = $item['code'];
+                    $assortment_group->description = $item['description'];
+                    $assortment_group->service_demand = $this->fixNumberType($item['service_demand']);
+                    $assortment_group->refill_cycle_time = $this->fixNumberType($item['refill_cycle_time']);
+                    $assortment_group->cycle_time_deviations = $this->fixNumberType($item['cycle_time_deviations']);
+                    $assortment_group->inventory_cost_factor = $this->fixNumberType($item['inventory_cost_factor']);
+                    $assortment_group->save();
+                } else {
+                    AssortmentGroup::where('name', '=', $item['name'])->update([
+                       'is_main_group' => $is_main_group,
+                        'main_group' => 0,
+                        'code' => $item['code'],
+                        'description' => $item['description'],
+                        'service_demand' => $this->fixNumberType($item['service_demand']),
+                        'refill_cycle_time' => $this->fixNumberType($item['refill_cycle_time']),
+                        'cycle_time_deviations' => $this->fixNumberType($item['cycle_time_deviations']),
+                        'inventory_cost_factor' => $this->fixNumberType($item['inventory_cost_factor'])
+                    ]);
+                }
+            }
+
+            foreach($rows as $item) {
+                $is_main_group = ($item['is_main_group'] == 'TAK');
+
+                if ($is_main_group)
+                    continue;
+
+                $main_group_id = AssortmentGroup::where('name', '=', $item['main_group'])->first()->id;
+                $assortment_group_count = AssortmentGroup::where('name', '=', $item['name'])->count();
+
+                if ($assortment_group_count == 0) {
+                    $assortment_group = new AssortmentGroup();
+                    $assortment_group->name = $item['name'];
+                    $assortment_group->is_main_group = $is_main_group;
+                    $assortment_group->main_group = $main_group_id;
+                    $assortment_group->code = $item['code'];
+                    $assortment_group->description = $item['description'];
+                    $assortment_group->service_demand = $this->fixNumberType($item['service_demand']);
+                    $assortment_group->refill_cycle_time = $this->fixNumberType($item['refill_cycle_time']);
+                    $assortment_group->cycle_time_deviations = $this->fixNumberType($item['cycle_time_deviations']);
+                    $assortment_group->inventory_cost_factor = $this->fixNumberType($item['inventory_cost_factor']);
+                    $assortment_group->save();
+                } else {
+                    AssortmentGroup::where('name', '=', $item['name'])->update([
+                        'is_main_group' => $is_main_group,
+                        'main_group' => $main_group_id,
+                        'code' => $item['code'],
+                        'description' => $item['description'],
+                        'service_demand' => $this->fixNumberType($item['service_demand']),
+                        'refill_cycle_time' => $this->fixNumberType($item['refill_cycle_time']),
+                        'cycle_time_deviations' => $this->fixNumberType($item['cycle_time_deviations']),
+                        'inventory_cost_factor' => $this->fixNumberType($item['inventory_cost_factor'])
+                    ]);
+                }
+            }
+
+            return response()->json([
+                'code' => SUCCESS_CODE,
+                'message' => IMPORT_SUCCESS,
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'code' => SERVER_ERROR_CODE,
+                'message' => SERVER_ERROR_MESSAGE
+            ]);
+        }
+    }
+
+    /**
+     * Verify the registered account.
+     *
+     * @param  Request  $request
+     * @return Response
+     */
     public function update(Request $request) {
         try {
 

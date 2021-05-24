@@ -30,7 +30,7 @@ class AssortmentController extends Controller
         try {
             $unit = Unit::all();
             $measure_unit = MeasurementUnit::all();
-            $assortment_group = AssortmentGroup::where('is_main_group', '=', 1)->get();
+            $assortment_group = AssortmentGroup::all();
             return response()->json([
                 'code' => SUCCESS_CODE,
                 'message' => SUCCESS_MESSAGE,
@@ -77,7 +77,108 @@ class AssortmentController extends Controller
             Assortment::create($request->data);
             return response()->json([
                 'code' => SUCCESS_CODE,
-                'message' => CREATE_CONTRACTOR_SUCCESS,
+                'message' => CREATE_ASSORTMENT_GROUP_SUCCESS,
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'code' => SERVER_ERROR_CODE,
+                'message' => SERVER_ERROR_MESSAGE
+            ]);
+        }
+    }
+
+    /**
+     * Verify the registered account.
+     *
+     * @param  Request  $request
+     * @return Response
+     */
+    public function createList(Request $request) {
+        try {
+            $rows = $request->data;
+            foreach($rows as $item) {
+                $measure_unit = MeasurementUnit::where('name', '=', $item['measure_unit'])->get();
+                $unit = Unit::where('name', '=', $item['unit'])->get();
+                $assortment_group = AssortmentGroup::where('name', '=', $item['assortment_group'])->get();
+
+                if ($item['measure_unit'] != null) {
+                    if (count($measure_unit) == 0) {
+                        $measure_unit_item = new MeasurementUnit();
+                        $measure_unit_item->name = $item['measure_unit'];
+                        $measure_unit_item->description = '';
+                        $measure_unit_item->save();
+                        $measure_unit_id = $measure_unit_item->id;
+                    } else {
+                        $measure_unit_id = $measure_unit[0]->id;
+                    }
+                }
+
+                if ($item['unit'] != null) {
+                    if (count($unit) == 0) {
+                        $unit_item = new Unit();
+                        $unit_item->name = $item['unit'];
+                        $unit_item->save();
+                        $unit_id = $unit_item->id;
+                    } else {
+                        $unit_id = $unit[0]->id;
+                    }
+                }
+
+                if ($item['assortment_group'] != null) {
+                    if (count($assortment_group) == 0) {
+                        $assortment_group_item = new AssortmentGroup();
+                        $assortment_group_item->name = $item['assortment_group'];
+                        $assortment_group_item->is_main_group = true;
+                        $assortment_group_item->save();
+                        $assortment_group_id = $assortment_group_item->id;
+                    } else {
+                        $assortment_group_id = $assortment_group[0]->id;
+                    }
+                }
+                $is_exist = (Assortment::where('name', '=', $item['name'])->count() != 0);
+                if ($is_exist) {
+                    Assortment::where('name', '=', $item['name'])->update([
+                        'name' => $item['name'],
+                        'index' => $item['index'],
+                        'gtin' => $item['gtin'],
+                        'unit' => $unit_id,
+                        'measure_unit' => $measure_unit_id,
+                        'active' => ($item['active'] == 'TAK'),
+                        'to_order' => ($item['to_order'] == 'TAK'),
+                        'purchase_price' => $this->fixNumberType($item['purchase_price']),
+                        'sale_price' => $this->fixNumberType($item['sale_price']),
+                        'assortment_group' => $assortment_group_id,
+                        'assortment_type' => $item['assortment_type'],
+                        'service_demand' => $this->fixNumberType($item['service_demand']),
+                        'refill_cycle_time' => $this->fixNumberType($item['refill_cycle_time']),
+                        'cycle_time_deviations' => $this->fixNumberType($item['cycle_time_deviations']),
+                        'inventory_cost_factor' => $this->fixNumberType($item['inventory_cost_factor'])
+                    ]);
+                } else {
+                    $assortment = new Assortment();
+                    $assortment->name = $item['name'];
+                    $assortment->index = $item['index'];
+                    $assortment->gtin = $item['gtin'];
+                    $assortment->unit = $unit_id;
+                    $assortment->measure_unit = $measure_unit_id;
+                    $assortment->active = ($item['active'] == 'TAK');
+                    $assortment->to_order = ($item['to_order'] == 'TAK');
+                    $assortment->purchase_price = $this->fixNumberType($item['purchase_price']);
+                    $assortment->sale_price = $this->fixNumberType($item['sale_price']);
+                    $assortment->assortment_group = $assortment_group_id;
+                    $assortment->assortment_type = $item['assortment_type'];
+                    $assortment->service_demand = $this->fixNumberType($item['service_demand']);
+                    $assortment->refill_cycle_time = $this->fixNumberType($item['refill_cycle_time']);
+                    $assortment->cycle_time_deviations = $this->fixNumberType($item['cycle_time_deviations']);
+                    $assortment->inventory_cost_factor = $this->fixNumberType($item['inventory_cost_factor']);
+                    $assortment->save();
+                }
+            }
+
+
+            return response()->json([
+                'code' => SUCCESS_CODE,
+                'message' => IMPORT_SUCCESS,
             ]);
         } catch (Exception $e) {
             return response()->json([
@@ -100,7 +201,7 @@ class AssortmentController extends Controller
 
             return response()->json([
                 'code' => SUCCESS_CODE,
-                'message' => UPDATE_CONTRACTOR_SUCCESS,
+                'message' => UPDATE_ASSORTMENT_SUCCESS,
             ]);
         } catch (Exception $e) {
             return response()->json([
@@ -176,7 +277,7 @@ class AssortmentController extends Controller
 
             return response()->json([
                 'code' => SUCCESS_CODE,
-                'message' => DELETE_CONTRACTOR_SUCCESS,
+                'message' => DELETE_ASSORTMENT_SUCCESS,
             ]);
         } catch(Exception $e) {
             return response()->json([

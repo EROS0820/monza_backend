@@ -15,4 +15,10 @@ class Controller extends BaseController
             'expires_in' => Auth::factory()->getTTL() * 60
         ], 200);
     }
+
+    public function fixNumberType($value) {
+        $str = strval($value);
+        $fixed_str = str_replace('.', ',', $str);
+        return $fixed_str;
+    }
 }

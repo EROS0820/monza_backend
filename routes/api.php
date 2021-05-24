@@ -29,6 +29,7 @@ $router->group(['prefix' => 'assortment', 'middleware' => ['auth']], function ()
     $router->post('/filter_list', 'AssortmentController@getFilterList');
     $router->get('/', 'AssortmentController@get');
     $router->post('/', 'AssortmentController@create');
+    $router->post('/list', 'AssortmentController@createList');
     $router->put('/',  'AssortmentController@update');
     $router->delete('/', 'AssortmentController@delete');
 });
@@ -38,6 +39,7 @@ $router->group(['prefix' => 'assortment_group', 'middleware' => ['auth']], funct
     $router->post('/filter_list', 'AssortmentGroupController@getFilterList');
     $router->get('/', 'AssortmentGroupController@get');
     $router->post('/', 'AssortmentGroupController@create');
+    $router->post('/list', 'AssortmentGroupController@createList');
     $router->put('/',  'AssortmentGroupController@update');
     $router->delete('/', 'AssortmentGroupController@delete');
 });
@@ -46,6 +48,7 @@ $router->group(['prefix' => 'warehouse', 'middleware' => ['auth']], function () 
     $router->post('/filter_list', 'WarehouseController@getFilterList');
     $router->get('/', 'WarehouseController@get');
     $router->post('/', 'WarehouseController@create');
+    $router->post('/list', 'WarehouseController@createList');
     $router->put('/',  'WarehouseController@update');
     $router->delete('/', 'WarehouseController@delete');
 });
@@ -55,6 +58,7 @@ $router->group(['prefix' => 'warehousegroup', 'middleware' => ['auth']], functio
     $router->post('/filter_list', 'WarehouseGroupController@getFilterList');
     $router->get('/', 'WarehouseGroupController@get');
     $router->post('/', 'WarehouseGroupController@create');
+    $router->post('/list', 'WarehouseGroupController@createList');
     $router->put('/',  'WarehouseGroupController@update');
     $router->delete('/', 'WarehouseGroupController@delete');
 });
@@ -63,6 +67,7 @@ $router->group(['prefix' => 'measurement_unit', 'middleware' => ['auth']], funct
     $router->post('/filter_list', 'MeasurementUnitController@getFilterList');
     $router->get('/', 'MeasurementUnitController@get');
     $router->post('/', 'MeasurementUnitController@create');
+    $router->post('/list', 'MeasurementUnitController@createList');
     $router->put('/',  'MeasurementUnitController@update');
     $router->delete('/', 'MeasurementUnitController@delete');
 });
@@ -71,6 +76,7 @@ $router->group(['prefix' => 'contractor', 'middleware' => ['auth']], function ()
     $router->post('/filter_list', 'ContractorController@getFilterList');
     $router->get('/', 'ContractorController@get');
     $router->post('/', 'ContractorController@create');
+    $router->post('/list', 'ContractorController@createList');
     $router->put('/',  'ContractorController@update');
     $router->delete('/', 'ContractorController@delete');
 });
@@ -80,6 +86,7 @@ $router->group(['prefix' => 'warehouse_operation', 'middleware' => ['auth']], fu
     $router->post('/filter_list', 'WarehouseOperationController@getFilterList');
     $router->get('/', 'WarehouseOperationController@get');
     $router->post('/', 'WarehouseOperationController@create');
+    $router->post('/list', 'WarehouseOperationController@createList');
     $router->put('/',  'WarehouseOperationController@update');
     $router->delete('/', 'WarehouseOperationController@delete');
 });

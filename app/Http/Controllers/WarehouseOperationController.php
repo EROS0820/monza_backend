@@ -100,6 +100,64 @@ class WarehouseOperationController extends Controller
      * @param  Request  $request
      * @return Response
      */
+    public function createList(Request $request) {
+        try {
+            $rows = $request->data;
+            foreach($rows as $item) {
+                $group_id = 0;
+                $assortment_id = 0;
+                $unit_id = 0;
+                $measure_unit_id = 0;
+                $warehouse_id = 0;
+                $contractor_id = 0;
+                $assortments = Assortment::where('name', '=', $item['assortment'])->get();
+                $units = Unit::where('name', '=', $item['unit'])->get();
+                $measure_units = MeasurementUnit::where('name', '=', $item['measure_unit'])->get();
+                $warehouses = Warehouse::where('name', '=', $item['warehouse'])->get();
+                $contractors = Contractor::where('name', '=', $item['contractor'])->get();
+                if (count($assortments) === 0 || count($units) === 0 || count($measure_units) === 0 || count($warehouses) === 0 || count($contractors) === 0) {
+                    continue;
+                }
+                $assortment_id = $assortments[0]->id;
+                $unit_id = $units[0]->id;
+                $measure_unit_id = $measure_units[0]->id;
+                $warehouse_id = $warehouses[0]->id;
+                $contractor_id = $contractors[0]->id;
+
+                WarehouseOperation::create([
+                    'assortment' => $assortment_id,
+                    'unit' => $unit_id,
+                    'measure_unit' => $measure_unit_id,
+                    'warehouse' => $warehouse_id,
+                    'contractor' => $contractor_id,
+                    'date' => $item['date'],
+                    'receipt_value' => $this->fixNumberType($item['receipt_value']),
+                    'issue_amount' => $this->fixNumberType($item['issue_amount']),
+                    'reception_frequency' => $this->fixNumberType($item['reception_frequency']),
+                    'release_frequency' => $this->fixNumberType($item['release_frequency']),
+                    'inventory' => $this->fixNumberType($item['inventory']),
+                    'order_quantity' => $this->fixNumberType($item['order_quantity']),
+                ]);
+            }
+
+            return response()->json([
+                'code' => SUCCESS_CODE,
+                'message' => IMPORT_SUCCESS,
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'code' => SERVER_ERROR_CODE,
+                'message' => SERVER_ERROR_MESSAGE
+            ]);
+        }
+    }
+
+    /**
+     * Verify the registered account.
+     *
+     * @param  Request  $request
+     * @return Response
+     */
     public function update(Request $request) {
         try {
 

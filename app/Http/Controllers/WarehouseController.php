@@ -1,7 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Assortment;
+use App\Models\AssortmentGroup;
 use App\Models\Candidate;
+use App\Models\MeasurementUnit;
 use App\Models\OrkTeam;
 use App\Models\QualificationPoint;
 use App\Models\QualificationPointType;
@@ -10,6 +13,7 @@ use App\Models\ServiceList;
 use App\Models\Training;
 use App\Models\TrainingClass;
 use App\Models\TrainingComment;
+use App\Models\Unit;
 use App\Models\Warehouse;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -65,6 +69,45 @@ class WarehouseController extends Controller
             return response()->json([
                 'code' => SUCCESS_CODE,
                 'message' => CREATE_WAREHOUSE_SUCCESS,
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'code' => SERVER_ERROR_CODE,
+                'message' => SERVER_ERROR_MESSAGE
+            ]);
+        }
+    }
+
+    /**
+     * Verify the registered account.
+     *
+     * @param  Request  $request
+     * @return Response
+     */
+    public function createList(Request $request) {
+        try {
+            $rows = $request->data;
+            foreach($rows as $item) {
+                $warehouse = Warehouse::where('name', '=', $item['name'])->count();
+
+                if ($warehouse === 0) {
+                    Warehouse::create([
+                        'name' => $item['name'],
+                        'description' => $item['description'],
+                        'active' => $item['active']
+                    ]);
+                } else {
+                    Warehouse::where('name', '=', $item['name'])->update([
+                        'name' => $item['name'],
+                        'description' => $item['description'],
+                        'active' => $item['active'] === 'TAK'
+                    ]);
+                }
+            }
+
+            return response()->json([
+                'code' => SUCCESS_CODE,
+                'message' => IMPORT_SUCCESS,
             ]);
         } catch (Exception $e) {
             return response()->json([

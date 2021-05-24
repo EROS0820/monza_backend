@@ -25,7 +25,7 @@ class CreateAssortmentsTable extends Migration
             $table->string('purchase_price');
             $table->string('sale_price');
             $table->integer('assortment_group');
-            $table->integer('assortment_type');
+            $table->string('assortment_type');
             $table->string('service_demand');
             $table->string('refill_cycle_time');
             $table->string('cycle_time_deviations');

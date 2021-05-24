@@ -122,6 +122,73 @@ class WarehouseGroupController extends Controller
      * @param  Request  $request
      * @return Response
      */
+    public function createList(Request $request) {
+        try {
+            $rows = $request->data;
+            foreach($rows as $item) {
+                $warehousegroup = WarehouseGroup::where('name', '=', $item['name'])->count();
+                $warehouses = explode(",", $item['warehouses']);
+                $id = 0;
+                if ($warehousegroup === 0) {
+                    $to_save = new WarehouseGroup();
+                    $to_save->name = $item['name'];
+                    $to_save->active = ($item['active'] === 'TAK');
+                    $to_save->description = $item['description'];
+                    $to_save->received = $item['received'];
+                    $to_save->releases = $item['releases'];
+                    $to_save->supply = $item['supply'];
+                    $to_save->save();
+                    $id = $to_save->id;
+                } else {
+                    WarehouseGroup::where('name', '=', $item['name'])->update([
+                        'name' => $item['name'],
+                        'description' => $item['description'],
+                        'active' => $item['active'] === 'TAK',
+                        'received' => $item['received'],
+                        'releases' => $item['releases'],
+                        'supply' => $item['supply']
+                    ]);
+                    $id = WarehouseGroup::where('name', '=', $item['name'])->first()->id;
+                }
+                foreach($warehouses as $item_warehouse) {
+                    $count = Warehouse::where('name', '=', $item_warehouse)->count();
+                    $warehouse_id = 0;
+                    if ($count === 0) {
+                        $warehouse = new Warehouse();
+                        $warehouse->name = $item_warehouse;
+                        $warehouse->save();
+                        $warehouse_id = $warehouse->id;
+                    } else {
+                        $warehouse_id = Warehouse::where('name', '=', $item_warehouse)->first()->id;
+                    }
+                    if (WarehouseGroupRelation::where('warehouse_group_id', '=', $id)->where('warehouse_id', '=', $warehouse_id)->count() == 0) {
+                        $relation = new WarehouseGroupRelation();
+                        $relation->warehouse_group_id = $id;
+                        $relation->warehouse_id = $warehouse_id;
+                        $relation->save();
+                    }
+
+                }
+            }
+
+            return response()->json([
+                'code' => SUCCESS_CODE,
+                'message' => IMPORT_SUCCESS,
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'code' => SERVER_ERROR_CODE,
+                'message' => SERVER_ERROR_MESSAGE
+            ]);
+        }
+    }
+
+    /**
+     * Verify the registered account.
+     *
+     * @param  Request  $request
+     * @return Response
+     */
     public function update(Request $request) {
         try {
             $id = $request->id;

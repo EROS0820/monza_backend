@@ -80,6 +80,69 @@ class ContractorController extends Controller
      * @param  Request  $request
      * @return Response
      */
+    public function createList(Request $request) {
+        try {
+            $rows = $request->data;
+            foreach($rows as $item) {
+                $count = Contractor::where('name', '=', $item['name'])->count();
+
+                if ($count === 0) {
+                    $contractor = new Contractor();
+                    $contractor->code = $item['code'];
+                    $contractor->name = $item['name'];
+                    $contractor->GLN = $item['GLN'];
+                    $contractor->address = $item['address'] ? $item['address'] : '';
+                    $contractor->postal_code = $item['postal_code'] ? $item['postal_code'] : '';
+                    $contractor->city = $item['city'] ? $item['city'] : '';
+                    $contractor->order_fulfillment_time = $this->fixNumberType($item['order_fulfillment_time']);
+                    $contractor->delivery_time_deviation = $this->fixNumberType($item['delivery_time_deviation']);
+                    $contractor->minimum_order_quantity = $this->fixNumberType($item['minimum_order_quantity']);
+                    $contractor->minimum_order_value = $this->fixNumberType($item['minimum_order_value']);
+                    $contractor->description = $item['description'] ? $item['description'] : '';
+                    $contractor->active = $item['active'] === 'TAK';
+                    $contractor->supplier = $item['supplier'] === 'TAK';
+                    $contractor->recipient = $item['recipient'] === 'TAK';
+                    $contractor->supplier_transport = $item['supplier_transport'] === 'TAK';
+                    $contractor->save();
+                } else {
+                    Contractor::where('name', '=', $item['name'])->update([
+                        'code' => $item['code'],
+                        'name' => $item['name'],
+                        'GLN' => $item['GLN'],
+                        'address' => $item['address'],
+                        'postal_code' => $item['postal_code'],
+                        'city' => $item['city'],
+                        'order_fulfillment_time' => $item['order_fulfillment_time'],
+                        'delivery_time_deviation' => $item['delivery_time_deviation'],
+                        'minimum_order_quantity' => $item['minimum_order_quantity'],
+                        'minimum_order_value' => $item['minimum_order_value'],
+                        'description' => $item['description'],
+                        'active' => $item['active'] === 'TAK',
+                        'supplier' => $item['supplier'] === 'TAK',
+                        'recipient' => $item['recipient'] === 'TAK',
+                        'supplier_transport' => $item['supplier_transport'] === 'TAK'
+                    ]);
+                }
+            }
+
+            return response()->json([
+                'code' => SUCCESS_CODE,
+                'message' => IMPORT_SUCCESS,
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'code' => SERVER_ERROR_CODE,
+                'message' => SERVER_ERROR_MESSAGE
+            ]);
+        }
+    }
+
+    /**
+     * Verify the registered account.
+     *
+     * @param  Request  $request
+     * @return Response
+     */
     public function update(Request $request) {
         try {
 

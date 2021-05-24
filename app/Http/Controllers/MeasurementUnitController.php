@@ -81,6 +81,43 @@ class MeasurementUnitController extends Controller
      * @param  Request  $request
      * @return Response
      */
+    public function createList(Request $request) {
+        try {
+            $rows = $request->data;
+            foreach($rows as $item) {
+                $measurement = MeasurementUnit::where('name', '=', $item['name'])->count();
+
+                if ($measurement === 0) {
+                    MeasurementUnit::create([
+                        'name' => $item['name'],
+                        'description' => $item['description'],
+                    ]);
+                } else {
+                    MeasurementUnit::where('name', '=', $item['name'])->update([
+                        'name' => $item['name'],
+                        'description' => $item['description'],
+                    ]);
+                }
+            }
+
+            return response()->json([
+                'code' => SUCCESS_CODE,
+                'message' => IMPORT_SUCCESS,
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'code' => SERVER_ERROR_CODE,
+                'message' => SERVER_ERROR_MESSAGE
+            ]);
+        }
+    }
+
+    /**
+     * Verify the registered account.
+     *
+     * @param  Request  $request
+     * @return Response
+     */
     public function update(Request $request) {
         try {
 
