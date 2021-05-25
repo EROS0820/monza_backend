@@ -27,4 +27,7 @@ class WarehouseGroup extends Model
 
     protected $primaryKey = 'id';
 
+    public function getWarehouseGroupRelation() {
+        return $this->hasMany(WarehouseGroupRelation::class, 'warehouse_group_id', 'id');
+    }
 }

@@ -91,6 +91,37 @@ class WarehouseGroupController extends Controller
      * @param  Request  $request
      * @return Response
      */
+    public function export(Request $request) {
+        try {
+            $list = WarehouseGroup::all();
+            foreach($list as $item) {
+                $warehouses = [];
+                $relations = $item->getWarehouseGroupRelation()->get();
+                foreach($relations as $relation) {
+                    $warehouses[] = $relation->getWarehouse()->first()->name;
+                }
+                $item['warehouses'] = implode(',', $warehouses);
+            }
+
+            return response()->json([
+                'code' => SUCCESS_CODE,
+                'message' => SUCCESS_MESSAGE,
+                'data' => $list
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'code' => SERVER_ERROR_CODE,
+                'message' => SERVER_ERROR_MESSAGE
+            ]);
+        }
+    }
+
+    /**
+     * Verify the registered account.
+     *
+     * @param  Request  $request
+     * @return Response
+     */
     public function create(Request $request) {
         try {
             $warehouses = $request->data['warehouses'];

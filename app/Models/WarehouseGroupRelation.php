@@ -27,4 +27,7 @@ class WarehouseGroupRelation extends Model
 
     protected $primaryKey = 'id';
 
+    public function getWarehouse() {
+        return $this->hasOne(Warehouse::class, 'id', 'warehouse_id');
+    }
 }

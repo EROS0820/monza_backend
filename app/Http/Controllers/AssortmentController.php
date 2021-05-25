@@ -72,6 +72,35 @@ class AssortmentController extends Controller
      * @param  Request  $request
      * @return Response
      */
+        public function export(Request $request) {
+        try {
+            $list = Assortment
+                ::leftJoin('units', 'assortments.unit', '=', 'units.id')
+                ->leftJoin('measurement_units', 'assortments.measure_unit', '=', 'measurement_units.id')
+                ->leftJoin('assortment_groups', 'assortments.assortment_group', '=', 'assortment_groups.id')
+                ->groupBy('assortments.id')
+                ->selectRaw('assortments.*, units.name as unit_name, measurement_units.name as measure_unit_name, assortment_groups.name as assortment_group_name')
+                ->get();
+
+            return response()->json([
+                'code' => SUCCESS_CODE,
+                'message' => SUCCESS_MESSAGE,
+                'data' => $list
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'code' => SERVER_ERROR_CODE,
+                'message' => SERVER_ERROR_MESSAGE
+            ]);
+        }
+    }
+
+    /**
+     * Verify the registered account.
+     *
+     * @param  Request  $request
+     * @return Response
+     */
     public function create(Request $request) {
         try {
             Assortment::create($request->data);
@@ -97,14 +126,14 @@ class AssortmentController extends Controller
         try {
             $rows = $request->data;
             foreach($rows as $item) {
-                $measure_unit = MeasurementUnit::where('name', '=', $item['measure_unit'])->get();
-                $unit = Unit::where('name', '=', $item['unit'])->get();
-                $assortment_group = AssortmentGroup::where('name', '=', $item['assortment_group'])->get();
+                $measure_unit = MeasurementUnit::where('name', '=', $item['measure_unit_name'])->get();
+                $unit = Unit::where('name', '=', $item['unit_name'])->get();
+                $assortment_group = AssortmentGroup::where('name', '=', $item['assortment_group_name'])->get();
 
-                if ($item['measure_unit'] != null) {
+                if ($item['measure_unit_name'] != null) {
                     if (count($measure_unit) == 0) {
                         $measure_unit_item = new MeasurementUnit();
-                        $measure_unit_item->name = $item['measure_unit'];
+                        $measure_unit_item->name = $item['measure_unit_name'];
                         $measure_unit_item->description = '';
                         $measure_unit_item->save();
                         $measure_unit_id = $measure_unit_item->id;
@@ -113,10 +142,10 @@ class AssortmentController extends Controller
                     }
                 }
 
-                if ($item['unit'] != null) {
+                if ($item['unit_name'] != null) {
                     if (count($unit) == 0) {
                         $unit_item = new Unit();
-                        $unit_item->name = $item['unit'];
+                        $unit_item->name = $item['unit_name'];
                         $unit_item->save();
                         $unit_id = $unit_item->id;
                     } else {
@@ -124,10 +153,10 @@ class AssortmentController extends Controller
                     }
                 }
 
-                if ($item['assortment_group'] != null) {
+                if ($item['assortment_group_name'] != null) {
                     if (count($assortment_group) == 0) {
                         $assortment_group_item = new AssortmentGroup();
-                        $assortment_group_item->name = $item['assortment_group'];
+                        $assortment_group_item->name = $item['assortment_group_name'];
                         $assortment_group_item->is_main_group = true;
                         $assortment_group_item->save();
                         $assortment_group_id = $assortment_group_item->id;

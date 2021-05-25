@@ -132,7 +132,7 @@ class AuthController extends Controller
                 $token = Hash::make($email);
                 User::where(['email' => $email])->update(['token' => $token]);
                 Mail::to($email)->send(
-                    new Email('forgotpassword-email', 'Forgot Password', ['url' => env('FORGOT_PASSWORD_URL').$token])
+                    new Email('forgotpassword-email', 'Przypominanie hasła do Monza', ['url' => env('FORGOT_PASSWORD_URL').$token])
                 );
                 return response()->json([
                     'code' => SUCCESS_CODE,

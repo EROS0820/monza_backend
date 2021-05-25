@@ -79,6 +79,76 @@ class WarehouseOperationController extends Controller
      * @param  Request  $request
      * @return Response
      */
+    public function export(Request $request) {
+        try {
+            $list = WarehouseOperation::all();
+            foreach($list as $item) {
+                $assortment_name = '';
+                $assortment_group_name = '';
+                $unit_name = '';
+                $measure_unit_name = '';
+                $warehouse_name = '';
+                $contractor_name = '';
+                $sale_price = '';
+                $purchase_price = '';
+
+                $assortment_item = $item->assortment_item()->get();
+                $unit_item = $item->unit_item()->get();
+                $measure_unit_item = $item->measure_unit_item()->get();
+                $warehouse_item = $item->warehouse_item()->get();
+                $contractor_item = $item->contractor_item()->get();
+
+                if (count($assortment_item) > 0) {
+                    $groups = $assortment_item[0]->assortment_group_item()->get();
+                    if (count($groups) > 0) {
+                        $assortment_group_name = $groups[0]->name;
+                    }
+                    $assortment_name = $assortment_item[0]->name;
+                    $sale_price = $assortment_item[0]->sale_price;
+                    $purchase_price = $assortment_item[0]->purchase_price;
+                }
+                if (count($unit_item)) {
+                    $unit_name = $unit_item[0]->name;
+                }
+                if (count($measure_unit_item)) {
+                    $measure_unit_name = $measure_unit_item[0]->name;
+                }
+                if (count($warehouse_item)) {
+                    $warehouse_name = $warehouse_item[0]->name;
+                }
+                if (count($contractor_item)) {
+                    $contractor_name = $contractor_item[0]->name;
+                }
+
+                $item['assortment_name'] = $assortment_name;
+                $item['assortment_group_name'] = $assortment_group_name;
+                $item['unit_name'] = $unit_name;
+                $item['measure_unit_name'] = $measure_unit_name;
+                $item['warehouse_name'] = $warehouse_name;
+                $item['contractor_name'] = $contractor_name;
+                $item['sale_price'] = $sale_price;
+                $item['purchase_price'] = $purchase_price;
+            }
+
+            return response()->json([
+                'code' => SUCCESS_CODE,
+                'message' => SUCCESS_MESSAGE,
+                'data' => $list
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'code' => SERVER_ERROR_CODE,
+                'message' => SERVER_ERROR_MESSAGE
+            ]);
+        }
+    }
+
+    /**
+     * Verify the registered account.
+     *
+     * @param  Request  $request
+     * @return Response
+     */
     public function create(Request $request) {
         try {
             WarehouseOperation::create($request->data);
@@ -110,11 +180,11 @@ class WarehouseOperationController extends Controller
                 $measure_unit_id = 0;
                 $warehouse_id = 0;
                 $contractor_id = 0;
-                $assortments = Assortment::where('name', '=', $item['assortment'])->get();
-                $units = Unit::where('name', '=', $item['unit'])->get();
-                $measure_units = MeasurementUnit::where('name', '=', $item['measure_unit'])->get();
-                $warehouses = Warehouse::where('name', '=', $item['warehouse'])->get();
-                $contractors = Contractor::where('name', '=', $item['contractor'])->get();
+                $assortments = Assortment::where('name', '=', $item['assortment_name'])->get();
+                $units = Unit::where('name', '=', $item['unit_name'])->get();
+                $measure_units = MeasurementUnit::where('name', '=', $item['measure_unit_name'])->get();
+                $warehouses = Warehouse::where('name', '=', $item['warehouse_name'])->get();
+                $contractors = Contractor::where('name', '=', $item['contractor_name'])->get();
                 if (count($assortments) === 0 || count($units) === 0 || count($measure_units) === 0 || count($warehouses) === 0 || count($contractors) === 0) {
                     continue;
                 }

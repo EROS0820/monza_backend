@@ -16,7 +16,7 @@ define('PASSWORD_INCORRECT_MESSAGE', 'Hasło jest nieprawidłowe.');
 define('PASSWORD_SUCCESS_UPDATE_MESSAGE', 'Hasło zostało pomyślnie zaktualizowane.');
 
 define('SERVER_ERROR_MESSAGE','An Error is occured on the server.');
-define('NOT_EXIST_ACCOUNT_MESSAGE', 'The Account does not exist');
+define('NOT_EXIST_ACCOUNT_MESSAGE', 'Konto o podanym adresie e-mail nie istnieje.');
 
 define('CREATE_ASSORTMENT_SUCCESS', 'Twój asortymentowe został zapisany.');
 define('UPDATE_ASSORTMENT_SUCCESS', 'Twój asortymentowe został zaktualizowany.');
@@ -51,4 +51,5 @@ define('DELETE_WAREHOUSE_OPERATION_SUCCESS', 'Twój operacje magazynowe został 
 define('SUCCESS_MESSAGE', 'The success response has been received');
 
 define('IMPORT_SUCCESS', 'Plik został pomyślnie zaimportowany.');
+define('EXPORT_SUCCSES', 'Dane zostały pomyślnie wyeksportowane.');
 
