@@ -161,7 +161,7 @@ class AssortmentGroupController extends Controller
                 if ($is_main_group)
                     continue;
 
-                $main_group_id = AssortmentGroup::where('name', '=', $item['main_group'])->first()->id;
+                $main_group_id = AssortmentGroup::where('name', '=', $item['main_group_name'])->first()->id;
                 $assortment_group_count = AssortmentGroup::where('name', '=', $item['name'])->count();
 
                 if ($assortment_group_count == 0) {
